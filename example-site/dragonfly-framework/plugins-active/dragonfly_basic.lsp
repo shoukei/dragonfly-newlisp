@@ -337,7 +337,9 @@
 (define (read-atom-feed feed-url max-items raw-xml)
 
 	; get feed-url
-	(set 'xml (get-url (string feed-url) ))
+        ;; get-url doesn't work for https so use curl instead
+	(set 'xml (exec (string {curl --silent } feed-url) ))
+	(set 'xml (join xml))
 	
 	(if (true? raw-xml)
 		(print xml)
@@ -381,7 +383,9 @@
 (define (read-rss-feed feed-url max-items raw-xml)
 
 	; get feed-url
-	(set 'xml (get-url (string feed-url) ))
+        ;; get-url doesn't work for https so use curl instead
+	(set 'xml (exec (string {curl --silent } feed-url) ))
+	(set 'xml (join xml))
 	
 	(if (true? raw-xml)
 		(print xml)
