@@ -1,4 +1,4 @@
-#!/usr/bin/env newlisp
+#!/usr/local/bin/newlisp
 ;; Dragonfly web framework
 ;; 
 ;;  Copyright (C) <2009>  <Marc Hildmann>
