@@ -383,9 +383,7 @@
 (define (read-rss-feed feed-url max-items raw-xml)
 
 	; get feed-url
-        ;; get-url doesn't work for https so use curl instead
-	(set 'xml (exec (string {curl --silent } feed-url) ))
-	(set 'xml (join xml))
+	(set 'xml (get-url (string feed-url) ))
 	
 	(if (true? raw-xml)
 		(print xml)
