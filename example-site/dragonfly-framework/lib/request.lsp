@@ -30,7 +30,7 @@
 ;; @return the value of the POST parameter for <str-key>, nil if no such POST variable was passed in.
 ;; @syntax ($FILES <str-key>)
 ;; <p>Returns an association list with keys ''name', ''data', and ''length' for the result
-;; of a 'multipart/form-data' posted form.</p>
+;; of a 'multipart/form-data' posted form. The value for ''data' is the path to the file. </p>
 ;; @syntax ($COOKIES <str-key>)
 ;; @return the value of the cookie with the key <str-key>, or nil if no such cookie exists.
 ;; @syntax $BINARY
@@ -142,7 +142,15 @@
       (when (set 'idx (find "\r\n--" data))
         (set 'data (0 idx data))
         (if (set 'val (regex-captcha {filename="(.+?)"} disp))
-          ($FILES val (list (list 'name var) (list 'data data) (list 'length (length data))))
+            (begin
+	      ;; prepend timestamp to filename so same filenames won't overwrite each other
+	      (setq time-now (date (date-value) 0 "%Y%m%d%H%M%S"))
+	      ;; be sure uploads directory exists
+	      (if (not (file? "uploads")) (make-dir "uploads"))
+	      (setq timestamped-filename (string "uploads/" time-now "-" val))
+	      (write-file timestamped-filename data)
+	      ($FILES val (list (list 'name var) (list 'data timestamped-filename) (list 'length (length data))))
+            )
           ;; ($POST var data)
           ;; Checkboxes can have multiple values so push instead of assign which will overwrite earlier assign
           ($POST var (push data ($POST var)))
