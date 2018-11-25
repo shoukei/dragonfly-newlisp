@@ -1,4 +1,5 @@
 example-site/**/plugins-active/_config.lsp
 example-site/oauth-details.lisp
+example-site/uploads
 *.log
 .hg
