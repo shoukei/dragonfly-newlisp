@@ -1,0 +1,68 @@
+<% (display-partial "doctype") %>
+<head>
+	<%
+	(display-partial "header")
+	(script (web-root "includes/js/jquery-ui-1.7.2.custom.min.js"))
+	%>
+</head>
+
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<% (display-partial "navigation") %>	
+		<div class="clear"></div>
+	</div>
+
+	<div id="content">
+				
+		<div class="title nomargin">
+			<p><% (title "| Dragonfly web framework") %><p>
+		</div>
+		
+		<h1>Uploading multiple files</h1>
+		<p class="extract">
+			Dragonfly's <b>lib/request.lsp</b> defines many of the global symbols needed to deal with getting user input from forms, handling file uploads, etc.
+		</p>
+                
+		<h3 class="code">Example: multipart/form-data</h3>
+		<p>
+                  Choose file(s) to upload and then click <b>Upload</b>. You can select multiple files using shift for continuous or command key on Macs
+                  for non continuous selections.
+		</p>
+		<div style="width:200px; margin-top: 10px">
+			<a name="multi"></a>
+			<form action="<%=(string DF_PAGE "#multi")%>" method="post" enctype='multipart/form-data'>
+                          <input type='file' name='uploaded_data[]' multiple>
+                          <input type='submit' value='Upload' name='submit'>
+				<div class="clear">
+                                </div>
+			</form>
+		</div>
+		
+                <% (when ($POST "submit") %>
+    
+                <p>Value of <span class="code"><b>($FILES)</b></span>:</p>
+		<p><span class="code"><%=($FILES)%></span></p>
+                <p>Value of <span class="code"><b>($POST)</b></span>:</p>
+		<p><span class="code"><%=($POST)%></span></p>
+                <p>The file(s) have been uploaded to the &quot;uploads/&quot; directory.
+                  The new filename with timestamps prepended can be seen in <span class="code"><b>($FILES)</b></span>.</p>
+                <!-- http://www.newlispfanclub.alh.net/forum/viewtopic.php?f=16&t=3678&p=18841&hilit=upload.cgi&sid=e9254c94b6d935dd667e5724e0a7a91d#p18841 -->
+
+		<%)%>
+                
+	
+		
+		<div class="line-dotted"></div>
+
+		<% (benchmark-result) %>
+		
+		<div class="line-dotted"></div>
+		
+		
+	</div><!-- END CONTENT -->
+	
+</div><!-- END WRAP -->
+<% (display-partial "footer") %>
+
