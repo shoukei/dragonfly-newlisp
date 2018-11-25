@@ -143,7 +143,9 @@
         (set 'data (0 idx data))
         (if (set 'val (regex-captcha {filename="(.+?)"} disp))
           ($FILES val (list (list 'name var) (list 'data data) (list 'length (length data))))
-          ($POST var data)
+          ;; ($POST var data)
+          ;; Checkboxes can have multiple values so push instead of assign which will overwrite earlier assign
+          ($POST var (push data ($POST var)))
         )
       )
     )

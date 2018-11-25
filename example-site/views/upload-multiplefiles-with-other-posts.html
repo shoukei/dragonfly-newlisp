@@ -1,0 +1,108 @@
+<% (display-partial "doctype") %>
+<head>
+  <%
+  (display-partial "header")
+  (script (web-root "includes/js/jquery-ui-1.7.2.custom.min.js"))
+  %>
+</head>
+
+<body>
+  <div id="wrap">
+    <div id="header">
+      <% (display-partial "navigation") %>	
+      <div class="clear"></div>
+    </div>
+
+    <div id="content">
+      
+      <div class="title nomargin">
+	<p><% (title "| Dragonfly web framework") %></p>
+      </div>
+      
+      <h2>Uploading file(s) with other post data</h2>
+      <br>
+      <a name="multi"></a>
+      <div>
+        <form action="<%=(string DF_PAGE "#multi")%>" method="post" enctype="multipart/form-data">
+
+          <table border="0">
+            <tbody><tr>
+              <td align="right"><b>Name: </b></td>
+              <td><input type="text" name="name" size="30" maxlength="20"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>Password: </b></td>
+              <td><input type="password" name="pass" size="6" maxlength="4"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>Grade: </b></td>
+              <td>
+                <input type="radio" name="grade" value="1st Grade" checked>1st
+                <input type="radio" name="grade" value="2nd Grade">2nd
+                <input type="radio" name="grade" value="3rd Grade">3rd
+                <input type="radio" name="grade" value="4th Grade">4th 
+                <input type="radio" name="grade" value="5th Grade">5th 
+                <input type="radio" name="grade" value="6th Grade">6th 
+              </td>
+            </tr>
+            <tr>
+              <td align="right"><b>Favorite subject</b></td>
+              <td>
+                <input type="checkbox" name="subject" value="English">English 
+                <input type="checkbox" name="subject" value="Math">Math 
+                <input type="checkbox" name="subject" value="Science">Science 
+                <input type="checkbox" name="subject" value="Social Science">Social Science 
+                <input type="checkbox" name="subject" value="PE">PE 
+              </td>
+            </tr>
+            <tr>
+              <td align="right"><b>Homework file(s)：</b></td>
+              <td><input type="file" name="homework[]" multiple size="40"></td>
+            </tr>
+            <tr>
+              <td align="right"><b>Other: </b></td>
+              <td>
+                <textarea  name="textdata" cols=40 rows=10></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <input type="submit" value="Submit" name="submit">
+                <input type="reset" value="Reset">
+              </td>
+            </tr>
+            </tbody></table>
+        </form>
+      </div>
+      <% (when ($POST "submit") %>
+
+      <p>Value of <span class="code"><b>($FILES)</b></span>:</p>
+      <p><span class="code"><%=($FILES)%></span></p>
+      <p>Value of <span class="code"><b>($POST)</b></span>:</p>
+      <p><span class="code"><%=($POST)%></span></p>
+
+      <% (println "★(first ($POST \"name\")):" (first ($POST "name")) "<br>") %>
+      <% (println "★(first ($POST \"pass\")):" (first ($POST "pass")) "<br>") %>
+      <% (println "★(first ($POST \"grade\")):" (first ($POST "grade")) "<br>") %>
+      <% (print "★(dolist (k ($POST \"subject\")) (println k)):") %>
+      <% (println (if ($POST "subject") (dolist (k ($POST "subject")) (println k))) "<br>") %>
+      <% (println "★(first ($POST \"textdata\")):" (first ($POST "textdata")) "<br>") %>
+      <p>The file(s) have been uploaded to the &quot;uploads/&quot; directory.
+        The new filename with timestamps prepended can be seen in <span class="code"><b>($FILES)</b></span>.</p>
+
+
+      <%)%>
+      
+      
+      <div class="line-dotted"></div>
+
+      <% (benchmark-result) %>
+      
+      <div class="line-dotted"></div>
+      
+      
+    </div><!-- END CONTENT -->
+    
+  </div><!-- END WRAP -->
+  <% (display-partial "footer") %>
