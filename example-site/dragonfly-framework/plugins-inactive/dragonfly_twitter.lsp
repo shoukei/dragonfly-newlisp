@@ -27,6 +27,9 @@
 ; !Loading plugin into Dragonfly context
 ;===============================================================================
 
+(DF:activate-plugin "twitter-oauth")
+;; (module "twitter-oauth.lsp")
+;; (load "plugins-inactive/twitter-oauth.lsp")
 (context 'Dragonfly)
 
 ;===============================================================================
@@ -39,24 +42,18 @@
 ;; <p>Writes the results of a Twitter search.</p>
 
 (define (twitter-search keyword max-items)
-	(set 'xml (get-url (string "http://search.twitter.com/search.atom?rpp="max-items"&q="keyword) ))
-	(xml-type-tags nil nil nil nil) ; no extra tags
-	(set 'sxml (xml-parse xml 31)) ; turn on SXML options
-	(set 'entry-index (ref-all '(entry *) sxml match))
-	(when (empty? entry-index)
-		(println "No entries found")
-	)
-	(dolist (idx entry-index)
-		(set 'entry (sxml idx))
-		(set 'dateseconds (date-parse (lookup 'published entry) "%Y-%m-%dT%H:%M:%SZ")) ; convert string date to seconds
-		
-		(println
-			"<div class='entry'>"
-			"<div class='headline'>" (lookup 'title entry) "</div><br/>"
-			"<div class='published'>" (date dateseconds 0 "%a %d %b %Y %H:%M:%S") "</div><div class='author'>By&nbsp;" (lookup '(author name) entry) "</div><br/>"
-			"</div>"
-		)
-	)
+  (set 'base-url "https://api.twitter.com/1.1/search/tweets.json")
+  (set 'query (list (list "count" max-items) (list "q" keyword)))
+  (set 'jsp (Oauth:get-tweets base-url query))
+  (setq jsp (lookup "statuses" jsp))
+  (dolist (i jsp)
+    (println
+     "<div class='entry'>"
+     "<div class='headline'>" (lookup "text" i) "</div><br/>"
+     "<div class='published'>" (lookup "created_at" i) "</div><div class='author'>By&nbsp;" (lookup "screen_name" (lookup "user" i)) "</div><br/>"
+     "</div>"
+    )
+  )
 )
 
 (context MAIN)
